@@ -91,7 +91,7 @@ def confirmReservation(
 
 
 # Admin & Customer
-@TestReservationApi.put("/reservation/{reservation_id}")
+@TestReservationApi.put("/reservation")
 def updateReservation(
         req: TestReservationUpdateRequest,
         auth: MockAuthToken = Depends(getAuthToken),
