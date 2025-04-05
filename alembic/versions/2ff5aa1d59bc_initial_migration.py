@@ -33,7 +33,7 @@ def upgrade() -> None:
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('exam_date_start', sa.DateTime(), nullable=False),
     sa.Column('exam_date_end', sa.DateTime(), nullable=False),
-    sa.Column('expected_participants', sa.Integer(), nullable=False),
+    sa.Column('applicants', sa.Integer(), nullable=False),
     sa.Column('is_confirmed', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),

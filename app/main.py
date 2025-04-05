@@ -1,12 +1,19 @@
 from fastapi import FastAPI
-from .database import engine
-from . import models
-from app.customer.api.CustomerApi import CustomerApi
-from app.admin.api.AdminApi import AdminApi
+from app.config.database import engine
+from .config import database
+from .recruitment.api.TestReservationApi import TestReservationApi
+from .user.api.UserMockApi import UserMockApi
 
-models.Base.metadata.create_all(bind=engine)
-
+database.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-app.include_router(CustomerApi, prefix="/customer", tags=["customer"])
-app.include_router(AdminApi, prefix="/admin", tags=["admin"])
+app.include_router(TestReservationApi, prefix="/recruitment/test", tags=["채용 시험 예약 관리"])
+app.include_router(UserMockApi, prefix="/user", tags=["유저"])
+
+
+import atexit
+
+@atexit.register
+def cleanup():
+    print("Cleaning up DB tables...")
+    database.Base.metadata.drop_all(bind=engine)
