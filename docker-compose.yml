@@ -1,26 +1,31 @@
 version: '3.8'
+
 services:
   db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    image: postgres:14
     environment:
-      POSTGRES_DB: examdb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
     ports:
       - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
-  app:
+  web:
     build: .
+    command: ["/app/wait-for-postgres.sh", "db", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+      POSTGRES_HOST: db
+    depends_on:
+      - db
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=postgresql://user:password@db/examdb
+      - "8000:8000"  # 예시용
 
 volumes:
-  postgres_data:
+  db_data:
